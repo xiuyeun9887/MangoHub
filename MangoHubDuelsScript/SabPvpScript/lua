@@ -3,116 +3,128 @@ local player = game.Players.LocalPlayer
 local gui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui"))
 gui.Name = "MangoHubUI"
 
--- Main Frame (SMALL)
+-- MAIN FRAME
 local frame = Instance.new("Frame", gui)
-frame.Size = UDim2.new(0, 160, 0, 190)
-frame.Position = UDim2.new(0.5, -80, 0.5, -95)
-frame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+frame.Size = UDim2.new(0, 150, 0, 185)
+frame.Position = UDim2.new(0.5, -75, 0.5, -92)
+frame.BackgroundColor3 = Color3.fromRGB(10,10,10)
 frame.BorderSizePixel = 0
 frame.Active = true
 frame.Draggable = true
 
-local corner = Instance.new("UICorner", frame)
-corner.CornerRadius = UDim.new(0, 10)
+Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 12)
 
--- RGB Border
+-- RGB BORDER
 local stroke = Instance.new("UIStroke", frame)
-stroke.Thickness = 2
+stroke.Thickness = 2.5
 
 task.spawn(function()
 	while true do
-		for i = 0, 1, 0.01 do
-			stroke.Color = Color3.fromHSV(i, 1, 1)
+		for i = 0,1,0.01 do
+			stroke.Color = Color3.fromHSV(i,1,1)
 			task.wait()
 		end
 	end
 end)
 
--- Title
+-- TITLE
 local title = Instance.new("TextLabel", frame)
-title.Size = UDim2.new(1, 0, 0, 22)
+title.Size = UDim2.new(1,0,0,24)
 title.BackgroundTransparency = 1
 title.Text = "MANGO HUB"
-title.TextColor3 = Color3.new(1,1,1)
-title.Font = Enum.Font.SourceSansBold
+title.Font = Enum.Font.GothamBold
 title.TextSize = 13
+title.TextColor3 = Color3.new(1,1,1)
 
--- Divider
+-- LINE
 local line = Instance.new("Frame", frame)
-line.Size = UDim2.new(1, -16, 0, 1)
-line.Position = UDim2.new(0, 8, 0, 22)
+line.Size = UDim2.new(1,-20,0,1)
+line.Position = UDim2.new(0,10,0,24)
 line.BackgroundColor3 = Color3.fromRGB(120,120,120)
 line.BorderSizePixel = 0
 
--- Row Creator (SMALL)
-local function createRow(text, key, y)
-	local label = Instance.new("TextLabel", frame)
-	label.Position = UDim2.new(0, 8, 0, y)
-	label.Size = UDim2.new(0, 90, 0, 16)
-	label.BackgroundTransparency = 1
-	label.Text = text
-	label.TextColor3 = Color3.new(1,1,1)
-	label.TextSize = 11
-	label.TextXAlignment = Enum.TextXAlignment.Left
+-- ROW FUNCTION (MORE ACCURATE SPACING)
+local function row(name, key, y)
+	-- TEXT
+	local txt = Instance.new("TextLabel", frame)
+	txt.Position = UDim2.new(0,10,0,y)
+	txt.Size = UDim2.new(0,80,0,16)
+	txt.BackgroundTransparency = 1
+	txt.Text = name
+	txt.Font = Enum.Font.Gotham
+	txt.TextSize = 11
+	txt.TextColor3 = Color3.new(1,1,1)
+	txt.TextXAlignment = Enum.TextXAlignment.Left
 
+	-- KEY BOX
 	local keyBox = Instance.new("TextLabel", frame)
-	keyBox.Position = UDim2.new(0, 100, 0, y)
-	keyBox.Size = UDim2.new(0, 20, 0, 16)
-	keyBox.BackgroundColor3 = Color3.fromRGB(40,40,40)
+	keyBox.Position = UDim2.new(0,90,0,y)
+	keyBox.Size = UDim2.new(0,20,0,16)
+	keyBox.BackgroundColor3 = Color3.fromRGB(35,35,45)
 	keyBox.Text = key
-	keyBox.TextColor3 = Color3.new(1,1,1)
+	keyBox.Font = Enum.Font.GothamBold
 	keyBox.TextSize = 10
-	
-	local kc = Instance.new("UICorner", keyBox)
-	kc.CornerRadius = UDim.new(0,5)
+	keyBox.TextColor3 = Color3.new(1,1,1)
 
+	Instance.new("UICorner", keyBox).CornerRadius = UDim.new(0,5)
+
+	-- TOGGLE BG
 	local toggle = Instance.new("TextButton", frame)
-	toggle.Position = UDim2.new(1, -40, 0, y)
-	toggle.Size = UDim2.new(0, 32, 0, 16)
-	toggle.BackgroundColor3 = Color3.fromRGB(60,60,60)
+	toggle.Position = UDim2.new(1,-42,0,y)
+	toggle.Size = UDim2.new(0,34,0,16)
+	toggle.BackgroundColor3 = Color3.fromRGB(40,40,40)
 	toggle.Text = ""
-	
-	local tc = Instance.new("UICorner", toggle)
-	tc.CornerRadius = UDim.new(1,0)
 
+	Instance.new("UICorner", toggle).CornerRadius = UDim.new(1,0)
+
+	-- CIRCLE
 	local circle = Instance.new("Frame", toggle)
-	circle.Size = UDim2.new(0, 14, 0, 14)
-	circle.Position = UDim2.new(0, 1, 0.5, -7)
+	circle.Size = UDim2.new(0,14,0,14)
+	circle.Position = UDim2.new(0,1,0.5,-7)
 	circle.BackgroundColor3 = Color3.new(1,1,1)
 	circle.BorderSizePixel = 0
-	
-	local cc = Instance.new("UICorner", circle)
-	cc.CornerRadius = UDim.new(1,0)
 
-	local enabled = false
+	Instance.new("UICorner", circle).CornerRadius = UDim.new(1,0)
+
+	-- STATE (default ON like image except target)
+	local on = true
+	if name == "Target Player" then
+		on = false
+	end
+
+	local function update()
+		if on then
+			toggle.BackgroundColor3 = Color3.fromRGB(170,0,255)
+			circle.Position = UDim2.new(1,-15,0.5,-7)
+		else
+			toggle.BackgroundColor3 = Color3.fromRGB(50,50,50)
+			circle.Position = UDim2.new(0,1,0.5,-7)
+		end
+	end
+
+	update()
 
 	toggle.MouseButton1Click:Connect(function()
-		enabled = not enabled
-		if enabled then
-			toggle.BackgroundColor3 = Color3.fromRGB(170, 0, 255)
-			circle.Position = UDim2.new(1, -15, 0.5, -7)
-		else
-			toggle.BackgroundColor3 = Color3.fromRGB(60,60,60)
-			circle.Position = UDim2.new(0, 1, 0.5, -7)
-		end
+		on = not on
+		update()
 	end)
 end
 
--- Rows
-createRow("Steal Boost", "X", 30)
-createRow("Jump Boost", "C", 55)
-createRow("Insta Grab", "G", 80)
-createRow("Auto Duels", "H", 105)
-createRow("Target Player", "D", 130)
+-- ROWS (MATCHED ORDER/SPACING)
+row("Steal Boost","X",32)
+row("Jump Boost","C",55)
+row("Insta Grab","G",78)
+row("Auto Duels","H",101)
+row("Target Player","D",124)
 
--- Drop Button (SMALL)
+-- DROP BUTTON (MATCH STYLE)
 local drop = Instance.new("TextButton", frame)
-drop.Position = UDim2.new(0, 8, 1, -28)
-drop.Size = UDim2.new(1, -16, 0, 20)
-drop.BackgroundColor3 = Color3.fromRGB(170, 0, 255)
-drop.Text = "Drop ▶"
-drop.TextColor3 = Color3.new(1,1,1)
+drop.Position = UDim2.new(0,10,1,-28)
+drop.Size = UDim2.new(1,-20,0,20)
+drop.BackgroundColor3 = Color3.fromRGB(170,0,255)
+drop.Text = "Drop Brainrot ▶"
+drop.Font = Enum.Font.GothamBold
 drop.TextSize = 11
+drop.TextColor3 = Color3.new(1,1,1)
 
-local dc = Instance.new("UICorner", drop)
-dc.CornerRadius = UDim.new(0,6)
+Instance.new("UICorner", drop).CornerRadius = UDim.new(0,6)
